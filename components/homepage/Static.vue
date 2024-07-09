@@ -48,7 +48,6 @@ const getTotalSeenThesis = () => {
 
 onMounted(async () => {
   const resThesisList = await getAll();
-  console.log(resThesisList);
   thesisList.value = resThesisList
 })
 
