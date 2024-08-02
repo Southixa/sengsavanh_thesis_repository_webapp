@@ -5,37 +5,37 @@
             <div class="w-full mt-6">
                 <NuxtLink to="/student-thesis" class="block lg:hidden mb-8">
                     <div class="w-full h-[120px] bg-gray-400 rounded-md px-6 flex justify-between items-center bg-[url('~/assets/image/category/cagegory_student_card_bg.png')] bg-no-repeat bg-cover bg-center">
-                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງນັກສຶກສາ ({{ formatCurrency(getTotalStudentThesisTypeCount()) }})</p>
+                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງນັກສຶກສາ ({{ formatCurrency(totalStudentThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10" size="40" />
                     </div>
                 </NuxtLink>
                 <NuxtLink to="/student-thesis" class="hidden lg:block mb-8">
                     <div class="w-full h-[150px] bg-gray-400 rounded-md px-10 md:flex justify-between items-center bg-[url('~/assets/image/category/cagegory_student_card_bg.png')] category-card student-card relative">
-                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງນັກສຶກສາ ({{ formatCurrency(getTotalStudentThesisTypeCount()) }})</p>
+                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງນັກສຶກສາ ({{ formatCurrency(totalStudentThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10 student-card-arrow" size="40" />
                     </div>
                 </NuxtLink>
                 <NuxtLink to="/teacher-thesis" class="block lg:hidden mb-8">
                     <div class="w-full h-[120px] bg-gray-400 rounded-md px-6 flex justify-between items-center bg-[url('~/assets/image/category/cagegory_teacher_card_bg.png')] bg-no-repeat bg-cover bg-center">
-                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງອາຈານ ({{ formatCurrency(getTotalTeacherThesisTypeCount()) }})</p>
+                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງອາຈານ ({{ formatCurrency(totalTeacherThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10" size="40" />
                     </div>
                 </NuxtLink>
                 <NuxtLink to="/teacher-thesis" class="hidden lg:block mb-8">
                     <div class="w-full h-[150px] bg-gray-400 rounded-md px-10 md:flex justify-between items-center bg-[url('~/assets/image/category/cagegory_teacher_card_bg.png')] category-card teacher-card relative">
-                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງອາຈານ ({{ formatCurrency(getTotalTeacherThesisTypeCount()) }})</p>
+                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງອາຈານ ({{ formatCurrency(totalTeacherThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10 student-card-arrow" size="40" />
                     </div>
                 </NuxtLink>
                 <NuxtLink to="/institute-thesis" class="block lg:hidden mb-8">
                     <div class="w-full h-[120px] bg-gray-400 rounded-md px-6 flex justify-between items-center bg-[url('~/assets/image/category/cagegory_insstitue_card_bg.png')] bg-no-repeat bg-cover bg-center">
-                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງສະຖາບັນ ({{ formatCurrency(getTotalInstituteThesisTypeCount()) }})</p>
+                        <p class="text-white text-xl font-semibold z-10">ບົດຈົບຂອງສະຖາບັນ ({{ formatCurrency(totalInstituteThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10" size="40" />
                     </div>
                 </NuxtLink>
                 <NuxtLink to="/institute-thesis" class="hidden lg:block mb-8">
                     <div class="w-full h-[150px] bg-gray-400 rounded-md px-10 md:flex justify-between items-center bg-[url('~/assets/image/category/cagegory_insstitue_card_bg.png')] category-card institute-card relative">
-                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງສະຖາບັນ ({{ formatCurrency(getTotalInstituteThesisTypeCount()) }})</p>
+                        <p class="text-white text-2xl font-semibold z-10">ບົດຈົບຂອງສະຖາບັນ ({{ formatCurrency(totalInstituteThesis) }})</p>
                         <Icon name="majesticons:arrow-right" class="text-white z-10 student-card-arrow" size="40" />
                     </div>
                 </NuxtLink>
@@ -110,6 +110,7 @@
 <script setup>
 
 import { formatCurrency } from '~/utils/helpers';
+import { animate, easeOut } from 'popmotion'
 
 const breadcrumbItems = [
     { text: 'ໜ້າຫຼັກ', path: '/' },
@@ -120,6 +121,22 @@ const breadcrumbItems = [
 const { getAll } = useThesis();
 
 const thesisList = ref([]);
+
+const totalStudentThesis = ref(0)
+const totalTeacherThesis = ref(0)
+const totalInstituteThesis = ref(0)
+
+const startAnimation = (endNumber, ref) => {
+  const eightyPercent = Math.round(endNumber * 0.8);
+  return animate({
+    to: [0, eightyPercent, endNumber],
+    duration: 500,
+    offset: [0, 0.8, 1],
+    onUpdate: (latest) =>  {
+      ref.value = Math.round(latest)
+    }
+  })
+}
 
 const getTotalStudentThesisTypeCount = () => {
     let total = 0;
@@ -153,8 +170,15 @@ const getTotalInstituteThesisTypeCount = () => {
 
 onMounted(async () => {
   const resThesisList = await getAll();
+  if(!resThesisList) {
+    thesisList.value = [];
+    return;
+  }
   // console.log(resThesisList);
-  thesisList.value = resThesisList
+  thesisList.value = resThesisList;
+  startAnimation(getTotalStudentThesisTypeCount(), totalStudentThesis)
+  startAnimation(getTotalTeacherThesisTypeCount(), totalTeacherThesis)
+  startAnimation(getTotalInstituteThesisTypeCount(), totalInstituteThesis)
 })
 
 </script>

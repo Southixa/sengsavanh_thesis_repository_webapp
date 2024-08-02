@@ -18,19 +18,19 @@
                         <div class="w-4 h-4 flex justify-center items-center">
                             <Icon name="mdi:eye" size="14" class="text-gray-300" />
                         </div>
-                        <p class="text-gray-400 text-xs">{{ props.thesis?.seen }}</p>
+                        <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.seen) }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-4 h-4 flex justify-center items-center">
                             <Icon name="mdi:heart" size="14" :class="isThisThesisLiked(props.thesis.thesis_id) ? 'text-red-400' : 'text-gray-300'" />
                         </div>
-                        <p class="text-gray-400 text-xs">{{ props.thesis?.liked }}</p>
+                        <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.liked) }}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <div class="w-4 h-4 flex justify-center items-center">
                             <Icon name="streamline:download-circle-solid" size="12" class="text-gray-300" />
                         </div>
-                        <p class="text-gray-400 text-xs">{{ props.thesis?.downloaded }}</p>
+                        <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.downloaded) }}</p>
                     </div>
                 </div>
             </div>
@@ -52,19 +52,19 @@
                     <div class="w-4 h-4 flex justify-center items-center">
                         <Icon name="mdi:eye" size="14" class="text-gray-300" />
                     </div>
-                    <p class="text-gray-400 text-xs">{{ props.thesis?.seen }}</p>
+                    <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.seen) }}</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-4 h-4 flex justify-center items-center">
                         <Icon name="mdi:heart" size="14" :class="isThisThesisLiked(props.thesis.thesis_id) ? 'text-red-400' : 'text-gray-300'" />
                     </div>
-                    <p class="text-gray-400 text-xs">{{ props.thesis?.liked }}</p>
+                    <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.liked) }}</p>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="w-4 h-4 flex justify-center items-center">
                         <Icon name="streamline:download-circle-solid" size="12" class="text-gray-300" />
                     </div>
-                    <p class="text-gray-400 text-xs">{{ props.thesis?.downloaded }}</p>
+                    <p class="text-gray-400 text-xs max-w-2">{{ formatNumber(props.thesis?.downloaded) }}</p>
                 </div>
             </div>
         </div>
@@ -151,6 +151,16 @@ const isTypeInstitute = (thesisTypeId) => {
         return true
     }
     return false
+}
+
+const formatNumber = (num) => {
+    if (num < 1000) {
+        return num.toString();
+    } else if (num < 1000000) {
+        return (num / 1000).toFixed(1).replace(/\.0$/, '') + 'k';
+    } else {
+        return (num / 1000000).toFixed(1).replace(/\.0$/, '') + 'm';
+    }
 }
 
 </script>
