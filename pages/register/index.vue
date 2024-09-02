@@ -117,7 +117,7 @@ const message = useMessage();
 const { nhost } = useNhost();
 const { getUserAvatarAll } = useUserAvatar();
 const { getOneStorage } = useStorage();
-const { addUser, getOneByEmail } = useUser();
+const { addUser, getOneByEmail, getOneByPhone } = useUser();
 
 const avatarLists = ref([]);
 
@@ -160,6 +160,14 @@ const handleRegister = async () => {
         loading.value = false;
         return;
     }
+
+    const resGetOneByPhone = await getOneByPhone(parseInt(formValue.value.phone));
+    if(resGetOneByPhone.length > 0) {
+        message.error("ເບີໂທຖືກໃຊ້ແລ້ວ");
+        loading.value = false;
+        return;
+    }
+    
     const resAddUser = await addUser(formValue.value);
     if(!resAddUser) {
         message.error("ລົງທະບຽນບໍ່ສຳເລັດ")

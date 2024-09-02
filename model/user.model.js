@@ -81,6 +81,20 @@ const User = {
             }
         }
     `,
+    getOneByPhone: gql`
+    query MyQuery($phone: bigint!) {
+            user_tb(where: {user_phone: {_eq: $phone}}) {
+                user_id
+                user_avatar_id
+                user_firstname
+                user_lastname
+                user_phone
+                user_email
+                user_password
+                user_is_approved
+            }
+        }
+    `,
     getOneByEmailAndPassword: gql`
     query MyQuery($email: String = "", $password: String = "") {
         user_tb(where: {user_email: {_eq: $email}, _and: {user_password: {_eq: $password}}}) {

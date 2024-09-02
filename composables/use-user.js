@@ -72,8 +72,25 @@ export const useUser = () => {
             }
         );
         if(error) {
-            message.error("ກະລຸນາເຂົ້າສູ່ລະບົບ");
+            message.error("ດຶງຂໍ້ມູນຕາມອີເມວບໍ່ສຳເລັດ");
             // console.log("error occurred in getOneByEmail =>", error);
+            return false
+        }
+        return data.user_tb
+    }
+    const getOneByPhone = async (phone) => {
+        if(!(typeof +phone === 'number' && !isNaN(phone))){
+            phone = 0;
+        }
+        const { data, error } = await nhost.graphql.request(
+            Models.User.getOneByPhone,
+            {
+                phone: phone
+            }
+        )
+        if(error) {
+            message.error("ດຶງຂໍ້ມູນຕາມເບີບໍ່ສຳເລັດ");
+            // console.log("error occurred in getOneByPhone =>", error);
             return false
         }
         return data.user_tb
@@ -82,6 +99,7 @@ export const useUser = () => {
     return {
         addUser,
         getOneByEmail,
+        getOneByPhone,
         login
     }
 
